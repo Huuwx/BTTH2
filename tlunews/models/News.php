@@ -1,6 +1,6 @@
 <?php
 
-class User
+class News
 {
     private $id;
     private $title;
