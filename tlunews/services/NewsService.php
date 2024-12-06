@@ -131,22 +131,30 @@ class NewsService
     public function searchNews($keyword)
     {
         try {
-            // B1: Kết nối DB
+            // Kiểm tra nếu từ khóa tìm kiếm hợp lệ
+            if (empty($keyword)) {
+                return [];
+            }
+
+            // Kết nối DB
             $conn = new PDO('mysql:host=localhost;dbname=tlunews', 'root', '');
 
-            // B2: Truy vấn tìm kiếm
-            $sql = "SELECT news.*, categories.name as category_name FROM news 
-                LEFT JOIN categories ON news.category_id = categories.id 
-                WHERE news.title LIKE :keyword OR news.content LIKE :keyword 
+            // Truy vấn tìm kiếm tin tức theo từ khóa
+            $sql = "SELECT news.*, categories.name AS category_name FROM news
+                LEFT JOIN categories ON news.category_id = categories.id
+                WHERE news.title LIKE :keyword OR news.content LIKE :keyword
                 ORDER BY news.created_at DESC";
             $stmt = $conn->prepare($sql);
+
+            // Áp dụng ký tự đại diện '%' vào từ khóa tìm kiếm
             $searchTerm = '%' . $keyword . '%';
-            $stmt->bindParam(':keyword', $searchTerm);
+            $stmt->bindParam(':keyword', $searchTerm, PDO::PARAM_STR);
             $stmt->execute();
 
-            // B3: Xử lý kết quả
+            // Xử lý kết quả trả về
             $newsList = [];
             while ($row = $stmt->fetch()) {
+                // Tạo đối tượng News và thêm vào danh sách
                 $news = new News(
                     $row['id'],
                     $row['title'],
@@ -158,8 +166,11 @@ class NewsService
                 );
                 $newsList[] = $news;
             }
+
             return $newsList;
         } catch (PDOException $e) {
+            // Log lỗi chi tiết để dễ dàng debug nếu có lỗi xảy ra
+            error_log("Error searching news: " . $e->getMessage());
             return [];
         }
     }
