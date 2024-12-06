@@ -25,6 +25,7 @@ class NewsService
                     $row['image'],
                     $row['category_id'],
                     $row['created_at'],
+                    $row['category_name']
                 );
                 $newsList[] = $news;
             }
@@ -54,7 +55,8 @@ class NewsService
                     $row['content'],
                     $row['image'],
                     $row['category_id'],
-                    $row['created_at']
+                    $row['created_at'],
+                    $row['category_name']
                 );
             }
             return null;
