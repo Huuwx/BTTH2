@@ -8,6 +8,11 @@ $controller = isset($_GET['controller']) ? $_GET['controller'] : 'user';
 $action = isset($_GET['action']) ? $_GET['action'] : 'login';
 
 if ($controller == 'home') {
+    if($action == 'homePage'){
+        require_once APP_ROOT . '/controllers/UserController.php';
+        $userController = new UserController();
+        $userController->homePage();
+    }
 
 } else if ($controller == 'user') {
     if ($action == 'manager') {
@@ -19,7 +24,6 @@ if ($controller == 'home') {
         $userController = new UserController();
         $userController->login();
     } else if ($action == 'store') {
-
         require_once APP_ROOT . '/controllers/UserController.php';
         $userController = new UserController();
         $userController->store();

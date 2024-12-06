@@ -12,6 +12,9 @@ class UserController
         // render du lieu lay duoc ra homepage
         include APP_ROOT . '/views/admin/user/index.php';
     }
+    public function homePage(){
+        require APP_ROOT . '/views/home/index.php';
+    }
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -29,7 +32,12 @@ class UserController
                         'username' => $user->getUsername(),
                         'role' => $user->getRole()
                     ];
-                    header('Location: index.php?controller=admin&action=dashboard');
+
+                    if ($user->getRole() == 1) {
+                        header('Location: index.php?controller=admin&action=dashboard');
+                    } else if ($user->getRole() == 0) {
+                        header('Location: index.php?controller=home&action=homePage');
+                    }
                     exit();
                 } else {
                     $errorMessage = "Sai tên đăng nhập hoặc mật khẩu!";
@@ -56,7 +64,7 @@ class UserController
             $confirmPassword = trim($_POST['confirmPassword'] ?? '');
             $role = intval($_POST['role'] ?? '');
 
-            
+
 
             // Kiểm tra dữ liệu nhập vào
             if (empty($username) || empty($password) || empty($confirmPassword)) {
