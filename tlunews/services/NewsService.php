@@ -127,4 +127,40 @@ class NewsService
             throw new Exception("Lỗi khi xóa tin tức: " . $e->getMessage());
         }
     }
+
+    public function searchNews($keyword)
+    {
+        try {
+            // B1: Kết nối DB
+            $conn = new PDO('mysql:host=localhost;dbname=tlunews', 'root', '');
+
+            // B2: Truy vấn tìm kiếm
+            $sql = "SELECT news.*, categories.name as category_name FROM news 
+                LEFT JOIN categories ON news.category_id = categories.id 
+                WHERE news.title LIKE :keyword OR news.content LIKE :keyword 
+                ORDER BY news.created_at DESC";
+            $stmt = $conn->prepare($sql);
+            $searchTerm = '%' . $keyword . '%';
+            $stmt->bindParam(':keyword', $searchTerm);
+            $stmt->execute();
+
+            // B3: Xử lý kết quả
+            $newsList = [];
+            while ($row = $stmt->fetch()) {
+                $news = new News(
+                    $row['id'],
+                    $row['title'],
+                    $row['content'],
+                    $row['image'],
+                    $row['created_at'],
+                    $row['category_id'],
+                    $row['category_name']
+                );
+                $newsList[] = $news;
+            }
+            return $newsList;
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
 }
