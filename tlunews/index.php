@@ -1,30 +1,37 @@
 <?php
 require_once('../tlunews/config/config.php');
 
-// Auto-load controller
-$controller = $_GET['controller'] ?? 'news';
-$action = $_GET['action'] ?? 'index';
 
-// Chuyển hướng đến các controller và action tương ứng
-$controllerFile = APP_ROOT . "/controllers/" . ucfirst($controller) . "Controller.php";
 
-if (file_exists($controllerFile)) {
-    require_once $controllerFile;
 
-    $controllerClass = ucfirst($controller) . "Controller";
-    $controllerInstance = new $controllerClass();
+$controller = isset($_GET['controller']) ? $_GET['controller'] : 'user';
+$action = isset($_GET['action']) ? $_GET['action'] : 'login';
 
-    if (method_exists($controllerInstance, $action)) {
-        // Truyền tham số ID nếu có
-        $id = $_GET['id'] ?? null;
-        if ($id !== null) {
-            $controllerInstance->$action($id);
-        } else {
-            $controllerInstance->$action();
-        }
+if ($controller == 'home') {
+
+} else if ($controller == 'user') {
+    if ($action == 'manager') {
+        require_once APP_ROOT . '/controllers/UserController.php';
+        $userController = new UserController();
+        $userController->index();
+    } else if ($action == 'login') {
+        require_once APP_ROOT . '/controllers/UserController.php';
+        $userController = new UserController();
+        $userController->login();
+    } else if ($action == 'store') {
+
+        require_once APP_ROOT . '/controllers/UserController.php';
+        $userController = new UserController();
+        $userController->store();
     } else {
-        echo "Action không tồn tại!";
+        echo "NOT FOUND";
+    }
+} else if ($controller == "admin") {
+    if ($action == 'dashboard') {
+        require_once APP_ROOT . '/controllers/AdminController.php';
+        $adminController = new AdminController();
+        $adminController->index();
     }
 } else {
-    echo "Controller không tồn tại!";
+    echo "NOT FOUND";
 }
