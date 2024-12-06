@@ -18,6 +18,7 @@
             </div>
         </form>
 
+        <!-- Danh sách tin tức -->
         <div class="row">
             <?php if (empty($newsList)): ?>
                 <div class="col-12">
@@ -42,6 +43,7 @@
             <?php endif; ?>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

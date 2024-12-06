@@ -1,31 +1,30 @@
 <?php
+
 require_once APP_ROOT . '/services/NewsService.php';
 
 class HomeController
 {
     public function index()
     {
+        // Lấy danh sách tin tức
         $newsService = new NewsService();
         $newsList = $newsService->getAllNews();
-        include APP_ROOT . '/views/home/index.php';
-    }
 
-    public function detail($id)
-    {
-        $newsService = new NewsService();
-        $news = $newsService->getById($id);
-        if (!$news) {
-            header('Location: index.php?controller=home&action=index');
-            exit();
+        // Tìm kiếm nếu có
+        if (isset($_GET['search'])) {
+            $searchTerm = $_GET['search'];
+            $newsList = $this->searchNews($newsList, $searchTerm);
         }
-        include APP_ROOT . '/views/news/detail.php';
+
+        // Hiển thị view danh sách tin tức
+        include APP_ROOT . '/views/home/index.php';
     }
 
-    public function search()
+    private function searchNews($newsList, $searchTerm)
     {
-        $keyword = trim($_GET['keyword'] ?? '');
-        $newsService = new NewsService();
-        $newsList = $newsService->searchNews($keyword);
-        include APP_ROOT . '/views/home/index.php';
+        // Lọc tin tức theo từ khóa tìm kiếm
+        return array_filter($newsList, function($news) use ($searchTerm) {
+            return stripos($news->getTitle(), $searchTerm) !== false || stripos($news->getContent(), $searchTerm) !== false;
+        });
     }
 }
