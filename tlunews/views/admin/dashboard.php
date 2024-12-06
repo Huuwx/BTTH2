@@ -43,7 +43,7 @@
                     </a>
                 </div>
                 <div class="col-md-4 text-center">
-                    <a href="news_page.php" class="btn btn-success btn-lg btn-square">
+                    <a href="<?= DOMAIN . '?controller=news&action=manager'; ?>" class="btn btn-success btn-lg btn-square">
                         <i class="fa-solid fa-newspaper"></i> News
                     </a>
                 </div>

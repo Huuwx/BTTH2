@@ -32,6 +32,32 @@ if ($controller == 'home') {
         $adminController = new AdminController();
         $adminController->index();
     }
-} else {
+} else if ($controller == "news") {
+    if ($action == 'manager') {
+        require_once APP_ROOT . '/controllers/NewsController.php';
+        $newsController = new NewsController();
+        $newsController->index();
+    } else if ($action == 'store') {
+
+        require_once APP_ROOT . '/controllers/NewsController.php';
+        $newsController = new NewsController();
+        $newsController->store();
+    } else if ($action == "create") {
+        require_once APP_ROOT . '/controllers/NewsController.php';
+        $newsController = new NewsController();
+        $newsController->create();
+    } else if ($action == "edit") {
+        require_once APP_ROOT . '/controllers/NewsController.php';
+        $id = $_GET['id'] ?? null;
+        $newsController = new NewsController();
+        $newsController->edit($id);
+    } else if ($action == "delete") {
+        require_once APP_ROOT . '/controllers/NewsController.php';
+        $id = $_GET['id'] ?? null;
+        $newsController = new NewsController();
+        $newsController->delete($id);
+    }
+}
+ else {
     echo "NOT FOUND";
 }
